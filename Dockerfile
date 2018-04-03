@@ -2,7 +2,7 @@ FROM alpine:3.6 AS ffmpeg_builder
 
 WORKDIR /app/ffmpeg
 
-ENV FFMPEG_VERSION=3.3.5
+ENV FFMPEG_VERSION=3.4.2
 ENV FFMPEG_VERSION_URL=http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2
 ENV PREFIX=/app/ffmpeg/install
 
