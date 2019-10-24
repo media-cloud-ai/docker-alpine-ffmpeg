@@ -1,8 +1,8 @@
-FROM alpine:3.6 AS ffmpeg_builder
+FROM alpine:3.10 AS ffmpeg_builder
 
 WORKDIR /app/ffmpeg
 
-ENV FFMPEG_VERSION=3.4.2
+ENV FFMPEG_VERSION=4.1.4
 ENV FFMPEG_VERSION_URL=http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2
 ENV PREFIX=/app/ffmpeg/install
 
@@ -69,18 +69,19 @@ rm -rf ${TMP_DIR}  && \
 apk del --purge .build-dependencies && \
 rm -rf /var/cache/apk/*
 
-FROM alpine:3.6
+FROM alpine:3.10
 
 WORKDIR /app
 
 COPY --from=ffmpeg_builder /app/ffmpeg/install/lib /usr/lib/
 COPY --from=ffmpeg_builder /app/ffmpeg/install/bin /usr/bin/
 COPY --from=ffmpeg_builder \
-  /usr/lib/libx265.so.110 \
-  /usr/lib/libx264.so.148  \
+  /usr/lib/libx265.so.169 \
+  /usr/lib/libx264.so.152  \
   /usr/lib/libwebpmux.so.3  \
   /usr/lib/libwebp.so.7  \
-  /usr/lib/libvpx.so.3  \
+  /usr/lib/libvpx.so.6  \
+  /usr/lib/libvorbisfile.so.3 \
   /usr/lib/libvorbisenc.so.2  \
   /usr/lib/libvorbis.so.0  \
   /usr/lib/libtheoraenc.so.1  \
@@ -88,6 +89,7 @@ COPY --from=ffmpeg_builder \
   /usr/lib/libsoxr.so.0  \
   /usr/lib/librtmp.so.1  \
   /lib/libz.so.1  \
+  /lib/libuuid.so.1.3.0 \
   /usr/lib/libopus.so.0  \
   /usr/lib/libmp3lame.so.0  \
   /usr/lib/libfreetype.so.6  \
@@ -110,7 +112,7 @@ COPY --from=ffmpeg_builder \
   /usr/lib/libgcc_s.so.1  \
   /usr/lib/libexpat.so.1  \
   /usr/lib/libffi.so.6  \
-  /usr/lib/libfdk-aac.so.1.0.1 \
+  /usr/lib/libfdk-aac.so.2 \
   /usr/lib/
 
-RUN ln -s /usr/lib/libfdk-aac.so.1.0.1 /usr/lib/libfdk-aac.so.1
+RUN ln -s /usr/lib/libuuid.so.1.3.0 /usr/lib/libuuid.so.1
