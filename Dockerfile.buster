@@ -1,0 +1,110 @@
+FROM debian:buster AS ffmpeg_builder
+
+WORKDIR /src/ffmpeg
+
+ENV FFMPEG_VERSION=4.1
+ENV FFMPEG_VERSION_URL=http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2
+ENV PREFIX=/src/ffmpeg/install
+
+RUN echo "deb http://ftp.fr.debian.org/debian/ buster main contrib non-free" >> /etc/apt/sources.list && \
+apt-get update && \
+apt-get install -y libfreetype6-dev \
+  libass-dev \
+  libogg-dev \
+  libtheora-dev \
+  libvorbis-dev \
+  libvpx-dev \
+  libwebp-dev \
+  libssh-dev \
+  libopus-dev \
+  librtmp-dev \
+  rtmpdump \
+  libx264-dev \
+  libx265-dev \
+  libsoxr-dev \
+  libmp3lame-dev \
+  yasm \
+  bzip2 \
+  coreutils \
+  nasm \
+  tar \
+  x264 \
+  x265 \
+  libfdk-aac-dev \
+  libgnutls28-dev \
+  wget \
+  make \
+  gcc && \
+TMP_DIR=$(mktemp -d) && \
+cd ${TMP_DIR} && \
+wget ${FFMPEG_VERSION_URL} && \
+tar xjf ffmpeg-${FFMPEG_VERSION}.tar.bz2  && \
+cd ffmpeg-${FFMPEG_VERSION} && \
+./configure --prefix="$PREFIX" --disable-debug  --disable-doc \
+  --disable-ffplay \
+  --enable-avresample \
+  --enable-gnutls \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfreetype \
+  --enable-libmp3lame \
+  --enable-libopus \
+  --enable-librtmp \
+  --enable-libtheora \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libwebp \
+  --enable-libsoxr \
+  --enable-libx264 \
+  --enable-libx265 \
+  --enable-libfdk-aac \
+  --enable-nonfree \
+  --enable-postproc \
+  --enable-small \
+  --enable-version3 && \
+make && \
+make install && \
+make distclean
+
+FROM debian:buster
+
+RUN echo "deb http://ftp.fr.debian.org/debian/ buster main contrib non-free" >> /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get install -y \
+    libx264-155 \
+    libx265-165 \
+    libwebp6 \
+    libwebpmux3 \
+    libvpx5 \
+    libvorbisenc2 \
+    libvorbis0a \
+    libtheora0 \
+    libsoxr0 \
+    librtmp1 \
+    libopus0 \
+    libmp3lame0 \
+    libfreetype6 \
+    libass9 \
+    libgnutls30 \
+    libstdc++6 \
+    libogg0 \
+    libgomp1 \
+    libbz2-1.0 \
+    libpng16-16 \
+    libfribidi0 \
+    libfontconfig1 \
+    libp11-kit0 \
+    libunistring2 \
+    libtasn1-6 \
+    libnettle6 \
+    libhogweed4 \
+    libgmp10 \
+    libgcc1 \
+    libexpat1 \
+    libffi6 \
+    libfdk-aac1 \
+    libharfbuzz0b \
+    libcairo2
+
+COPY --from=ffmpeg_builder /src/ffmpeg/install/lib /usr/lib/
+COPY --from=ffmpeg_builder /src/ffmpeg/install/bin /usr/bin/
