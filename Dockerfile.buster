@@ -104,7 +104,8 @@ RUN echo "deb http://ftp.fr.debian.org/debian/ buster main contrib non-free" >> 
     libffi6 \
     libfdk-aac1 \
     libharfbuzz0b \
-    libcairo2
+    libcairo2 \
+    libssl1.1
 
 COPY --from=ffmpeg_builder /src/ffmpeg/install/lib /usr/lib/
 COPY --from=ffmpeg_builder /src/ffmpeg/install/bin /usr/bin/
