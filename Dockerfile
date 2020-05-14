@@ -34,7 +34,7 @@ apk add --no-cache   --virtual \
   nasm \
   tar \
   x264 && \
-apk add fdk-aac-dev --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
+apk add fdk-aac-dev --update --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted && \
 TMP_DIR=$(mktemp -d) && \
 cd ${TMP_DIR} && \
 wget ${FFMPEG_VERSION_URL} && \
@@ -75,6 +75,7 @@ WORKDIR /app
 
 COPY --from=ffmpeg_builder /app/ffmpeg/install/lib /usr/lib/
 COPY --from=ffmpeg_builder /app/ffmpeg/install/bin /usr/bin/
+COPY --from=ffmpeg_builder /app/ffmpeg/install/include /usr/include/
 COPY --from=ffmpeg_builder \
   /usr/lib/libx265.so.169 \
   /usr/lib/libx264.so.152  \
