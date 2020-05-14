@@ -109,3 +109,4 @@ RUN echo "deb http://ftp.fr.debian.org/debian/ buster main contrib non-free" >> 
 
 COPY --from=ffmpeg_builder /src/ffmpeg/install/lib /usr/lib/
 COPY --from=ffmpeg_builder /src/ffmpeg/install/bin /usr/bin/
+COPY --from=ffmpeg_builder /src/ffmpeg/install/include /usr/include/

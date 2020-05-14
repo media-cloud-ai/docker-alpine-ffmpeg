@@ -75,6 +75,7 @@ WORKDIR /app
 
 COPY --from=ffmpeg_builder /app/ffmpeg/install/lib /usr/lib/
 COPY --from=ffmpeg_builder /app/ffmpeg/install/bin /usr/bin/
+COPY --from=ffmpeg_builder /app/ffmpeg/install/include /usr/include/
 COPY --from=ffmpeg_builder \
   /usr/lib/libx265.so.169 \
   /usr/lib/libx264.so.152  \
