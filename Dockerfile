@@ -34,7 +34,7 @@ apk add --no-cache   --virtual \
   nasm \
   tar \
   x264 && \
-apk add fdk-aac-dev --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
+apk add fdk-aac-dev --update --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted && \
 TMP_DIR=$(mktemp -d) && \
 cd ${TMP_DIR} && \
 wget ${FFMPEG_VERSION_URL} && \
