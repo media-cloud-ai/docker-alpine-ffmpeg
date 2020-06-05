@@ -34,12 +34,21 @@ apt-get install -y libfreetype6-dev \
   libgnutls28-dev \
   wget \
   make \
-  gcc && \
+  cmake \
+  git \
+  tcl \
+  gcc \
+  g++ && \
 TMP_DIR=$(mktemp -d) && \
 cd ${TMP_DIR} && \
 wget ${FFMPEG_VERSION_URL} && \
 tar xjf ffmpeg-${FFMPEG_VERSION}.tar.bz2  && \
 cd ffmpeg-${FFMPEG_VERSION} && \
+git clone https://github.com/Haivision/srt.git srt && \
+cd srt && \
+./configure --prefix="/usr" && \
+make && make install && \
+ldconfig && cd .. && \
 ./configure --prefix="$PREFIX" --disable-debug  --disable-doc \
   --disable-ffplay \
   --enable-avresample \
@@ -55,6 +64,7 @@ cd ffmpeg-${FFMPEG_VERSION} && \
   --enable-libvpx \
   --enable-libwebp \
   --enable-libsoxr \
+  --enable-libsrt \
   --enable-libx264 \
   --enable-libx265 \
   --enable-libfdk-aac \
@@ -64,7 +74,8 @@ cd ffmpeg-${FFMPEG_VERSION} && \
   --enable-version3 && \
 make && \
 make install && \
-make distclean
+make distclean && \
+cp /usr/lib/x86_64-linux-gnu/libsrt* /src/ffmpeg/install/lib
 
 FROM debian:buster
 

@@ -20,6 +20,7 @@ apk --no-cache add freetype-dev \
   libwebp-dev \
   libssh2 \
   opus-dev \
+  openssl-dev \
   rtmpdump-dev \
   x264-dev \
   x265-dev \
@@ -30,9 +31,10 @@ apk add --no-cache   --virtual \
   build-base \
   bzip2 \
   coreutils \
-  gnutls \
   nasm \
   tar \
+  git \
+  tcl \
   x264 && \
 apk add fdk-aac-dev --update --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted && \
 TMP_DIR=$(mktemp -d) && \
@@ -40,6 +42,13 @@ cd ${TMP_DIR} && \
 wget ${FFMPEG_VERSION_URL} && \
 tar xjvf ffmpeg-${FFMPEG_VERSION}.tar.bz2  && \
 cd ffmpeg* && \
+git clone https://github.com/Haivision/srt.git srt && \
+cd srt && \
+./configure --prefix="/usr" && \
+make && make install && \
+ldconfig /etc/ld.so.conf.d && cd .. && \
+ls -la /usr/lib64 && \
+mv /usr/lib64/libsrt* /usr/lib && mv /usr/lib64/pkgconfig/*.pc /usr/lib/pkgconfig && \
 ./configure --prefix="$PREFIX" --disable-debug  --disable-doc \
   --disable-ffplay \
   --enable-avresample \
@@ -55,6 +64,7 @@ cd ffmpeg* && \
   --enable-libvpx \
   --enable-libwebp \
   --enable-libsoxr \
+  --enable-libsrt \
   --enable-libx264 \
   --enable-libx265 \
   --enable-libfdk-aac \
@@ -114,6 +124,7 @@ COPY --from=ffmpeg_builder \
   /usr/lib/libexpat.so.1  \
   /usr/lib/libffi.so.6  \
   /usr/lib/libfdk-aac.so.2 \
+  /usr/lib/libsrt.so.1 \
   /usr/lib/
 
 RUN ln -s /usr/lib/libuuid.so.1.3.0 /usr/lib/libuuid.so.1
